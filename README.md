@@ -1,6 +1,6 @@
 # challenge
 
-Adversarial compliance artifact interrogation engine.
+Ten patterns. Any one of them is what your auditor asks first. Run them yourself before they do.
 
 ```bash
 go get github.com/Formulary-Labs/challenge
@@ -8,11 +8,9 @@ go get github.com/Formulary-Labs/challenge
 
 ## What it does
 
-`challenge` applies 10 deterministic interrogation patterns to a compliance program artifact — a SOA, control catalog, risk assessment, or `assay` output. Each pattern flags a structural observation that a qualified subject matter expert should investigate.
+`challenge` applies 10 deterministic interrogation patterns to a compliance program artifact — a SOA, control catalog, risk assessment, or `assay` output. Each pattern flags a structural observation a qualified subject matter expert should investigate before the artifact leaves the building.
 
-`challenge` does not make compliance determinations. It surfaces questions that a compliance professional would ask when reviewing an artifact for audit readiness.
-
-All patterns are deterministic. The same input produces the same output on every run.
+`challenge` does not make compliance determinations. It surfaces the questions. Same input, same output, every run.
 
 ## Input
 
