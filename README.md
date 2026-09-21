@@ -102,6 +102,10 @@ challenge assessment.yaml --severity-threshold medium
 
 Run it on a SOA after any major program change to check for structural regressions before the next cycle.
 
+## Catalogs
+
+The `--catalog` flag enables inheritance validation against a gemara `ControlCatalog`. See [CATALOGS.md](https://github.com/Formulary-Labs/.github/blob/main/CATALOGS.md) for known upstream catalog sources.
+
 ## License
 
 Apache License 2.0
