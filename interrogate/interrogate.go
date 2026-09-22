@@ -24,22 +24,24 @@ import (
 // PatternID is one of the 10 deterministic interrogation patterns.
 type PatternID string
 
+//nolint:revive // PatternID constants are self-documenting string identifiers.
 const (
-	RestatementTest            PatternID = "RESTATEMENT_TEST"
-	StakeholderAbsenceTest     PatternID = "STAKEHOLDER_ABSENCE_TEST"
-	EvidenceTraceabilityTest   PatternID = "EVIDENCE_TRACEABILITY_TEST"
-	InheritanceValidationTest  PatternID = "INHERITANCE_VALIDATION_TEST"
-	ExceptionHonestyTest       PatternID = "EXCEPTION_HONESTY_TEST"
-	CadenceSustainabilityTest  PatternID = "CADENCE_SUSTAINABILITY_TEST"
-	RiskAppetiteTest           PatternID = "RISK_APPETITE_TEST"
-	LeadershipRealityTest      PatternID = "LEADERSHIP_REALITY_TEST"
-	ScopeBoundaryTest          PatternID = "SCOPE_BOUNDARY_TEST"
-	OperationalRealityTest     PatternID = "OPERATIONAL_REALITY_TEST"
+	RestatementTest           PatternID = "RESTATEMENT_TEST"
+	StakeholderAbsenceTest    PatternID = "STAKEHOLDER_ABSENCE_TEST"
+	EvidenceTraceabilityTest  PatternID = "EVIDENCE_TRACEABILITY_TEST"
+	InheritanceValidationTest PatternID = "INHERITANCE_VALIDATION_TEST"
+	ExceptionHonestyTest      PatternID = "EXCEPTION_HONESTY_TEST"
+	CadenceSustainabilityTest PatternID = "CADENCE_SUSTAINABILITY_TEST"
+	RiskAppetiteTest          PatternID = "RISK_APPETITE_TEST"
+	LeadershipRealityTest     PatternID = "LEADERSHIP_REALITY_TEST"
+	ScopeBoundaryTest         PatternID = "SCOPE_BOUNDARY_TEST"
+	OperationalRealityTest    PatternID = "OPERATIONAL_REALITY_TEST"
 )
 
 // Severity mirrors the spec severity levels.
 type Severity string
 
+//nolint:revive // Severity constants are self-documenting.
 const (
 	Critical Severity = "critical"
 	High     Severity = "high"
@@ -49,58 +51,63 @@ const (
 
 // Finding is a single triggered pattern result.
 type Finding struct {
-	ID          string    `json:"id"`
-	PatternID   PatternID `json:"pattern_id"`
-	Severity    Severity  `json:"severity"`
-	ControlID   string    `json:"control_id,omitempty"`
-	Observation string    `json:"observation"`
-	Risk        string    `json:"risk"`
-	Recommendation string `json:"recommendation"`
+	ID             string    `json:"id"`
+	PatternID      PatternID `json:"pattern_id"`
+	Severity       Severity  `json:"severity"`
+	ControlID      string    `json:"control_id,omitempty"`
+	Observation    string    `json:"observation"`
+	Risk           string    `json:"risk"`
+	Recommendation string    `json:"recommendation"`
 }
 
 // Report is the full challenge output.
 type Report struct {
-	Artifact       string    `json:"artifact"`
-	Framework      string    `json:"framework,omitempty"`
-	GeneratedAt    time.Time `json:"generated_at"`
-	OverallPosture Severity  `json:"overall_posture"`
-	Findings       []Finding `json:"findings"`
+	Artifact       string      `json:"artifact"`
+	Framework      string      `json:"framework,omitempty"`
+	GeneratedAt    time.Time   `json:"generated_at"`
+	OverallPosture Severity    `json:"overall_posture"`
+	Findings       []Finding   `json:"findings"`
 	PatternsRun    []PatternID `json:"patterns_run"`
-	Disclaimer     string    `json:"disclaimer"`
+	Disclaimer     string      `json:"disclaimer"`
 }
 
 // ControlEntry represents a single control in the artifact.
 type ControlEntry struct {
-	ID                   string    `json:"id"`
-	Title                string    `json:"title,omitempty"`
-	Requirement          string    `json:"requirement,omitempty"`
-	Implementation       string    `json:"implementation,omitempty"`
-	Owner                string    `json:"owner,omitempty"`
-	Inherited            bool      `json:"inherited,omitempty"`
-	InheritedFrom        string    `json:"inherited_from,omitempty"`
-	ValidatedFor         string    `json:"validated_for,omitempty"`
-	EvidenceRef          string    `json:"evidence_ref,omitempty"`
-	EvidencePath         string    `json:"evidence_path,omitempty"`
-	Determination        string    `json:"determination,omitempty"`   // satisfied, partially_satisfied, not_satisfied, na
-	LastReviewed         *time.Time `json:"last_reviewed,omitempty"`
-	ReviewCadenceDays    int       `json:"review_cadence_days,omitempty"`
-	RiskScore            float64   `json:"risk_score,omitempty"`      // 0-9 matrix score
-	RiskAccepted         bool      `json:"risk_accepted,omitempty"`
-	LeadershipRequired   bool      `json:"leadership_required,omitempty"`
-	Excluded             bool      `json:"excluded,omitempty"`
-	ExclusionJustification string  `json:"exclusion_justification,omitempty"`
+	ID                     string     `json:"id"`
+	Title                  string     `json:"title,omitempty"`
+	Requirement            string     `json:"requirement,omitempty"`
+	Implementation         string     `json:"implementation,omitempty"`
+	Owner                  string     `json:"owner,omitempty"`
+	Inherited              bool       `json:"inherited,omitempty"`
+	InheritedFrom          string     `json:"inherited_from,omitempty"`
+	ValidatedFor           string     `json:"validated_for,omitempty"`
+	EvidenceRef            string     `json:"evidence_ref,omitempty"`
+	EvidencePath           string     `json:"evidence_path,omitempty"`
+	Determination          string     `json:"determination,omitempty"` // satisfied, partially_satisfied, not_satisfied, na
+	LastReviewed           *time.Time `json:"last_reviewed,omitempty"`
+	ReviewCadenceDays      int        `json:"review_cadence_days,omitempty"`
+	RiskScore              float64    `json:"risk_score,omitempty"` // 0-9 matrix score
+	RiskAccepted           bool       `json:"risk_accepted,omitempty"`
+	LeadershipRequired     bool       `json:"leadership_required,omitempty"`
+	Excluded               bool       `json:"excluded,omitempty"`
+	ExclusionJustification string     `json:"exclusion_justification,omitempty"`
 }
 
 // ChallengeArtifact is the top-level artifact structure challenge reads.
 // It accepts gemara ControlCatalog shape and a richer SOA/assessment shape.
 type ChallengeArtifact struct {
-	Framework       string         `json:"framework,omitempty"`
-	Program         string         `json:"program,omitempty"`
-	ProductContext  string         `json:"product_context,omitempty"`
-	Scope           string         `json:"scope,omitempty"`
-	ExclusionCount  int            `json:"exclusion_count,omitempty"`
-	ExceptionCount  int            `json:"exception_count,omitempty"`
-	Controls        []ControlEntry `json:"controls,omitempty"`
+	Framework      string         `json:"framework,omitempty"`
+	Program        string         `json:"program,omitempty"`
+	ProductContext string         `json:"product_context,omitempty"`
+	Scope          string         `json:"scope,omitempty"`
+	ExclusionCount int            `json:"exclusion_count,omitempty"`
+	ExceptionCount int            `json:"exception_count,omitempty"`
+	Controls       []ControlEntry `json:"controls,omitempty"`
+
+	// CatalogPath is an optional path to a gemara ControlCatalog YAML that
+	// provides the canonical control list for inheritance validation. Set by
+	// the caller via --catalog; not part of the artifact JSON itself.
+	CatalogPath string `json:"-"`
 
 	// gemara ControlCatalog shape compatibility.
 	Metadata *struct {
@@ -240,11 +247,11 @@ func applyRestatementTest(a *ChallengeArtifact) []Finding {
 		}
 		if textSimilarity(c.Requirement, c.Implementation) >= 0.65 {
 			out = append(out, Finding{
-				PatternID:   RestatementTest,
-				Severity:    High,
-				ControlID:   c.ID,
-				Observation: fmt.Sprintf("Control %s: implementation text is %.0f%% similar to the requirement — likely a restatement, not an implementation description", c.ID, textSimilarity(c.Requirement, c.Implementation)*100),
-				Risk:        "Auditor will flag a restatement as non-conformant — the program cannot demonstrate what it actually does",
+				PatternID:      RestatementTest,
+				Severity:       High,
+				ControlID:      c.ID,
+				Observation:    fmt.Sprintf("Control %s: implementation text is %.0f%% similar to the requirement — likely a restatement, not an implementation description", c.ID, textSimilarity(c.Requirement, c.Implementation)*100),
+				Risk:           "Auditor will flag a restatement as non-conformant — the program cannot demonstrate what it actually does",
 				Recommendation: "Replace with a concrete description of operational behavior: who does what, how often, and where the evidence lives",
 			})
 		}
@@ -270,10 +277,10 @@ func applyStakeholderAbsenceTest(a *ChallengeArtifact) []Finding {
 		pct := float64(count) / float64(total) * 100
 		if pct >= 50 && total >= 5 {
 			out = append(out, Finding{
-				PatternID:   StakeholderAbsenceTest,
-				Severity:    Medium,
-				Observation: fmt.Sprintf("Owner %q is assigned to %.0f%% of controls (%d/%d) — single point of ownership failure", owner, pct, count, total),
-				Risk:        "Key person dependency; ownership gaps become visible under audit interview or personnel change",
+				PatternID:      StakeholderAbsenceTest,
+				Severity:       Medium,
+				Observation:    fmt.Sprintf("Owner %q is assigned to %.0f%% of controls (%d/%d) — single point of ownership failure", owner, pct, count, total),
+				Risk:           "Key person dependency; ownership gaps become visible under audit interview or personnel change",
 				Recommendation: "Distribute control ownership; ensure each control domain has a distinct named owner who can speak to implementation",
 			})
 		}
@@ -287,10 +294,10 @@ func applyStakeholderAbsenceTest(a *ChallengeArtifact) []Finding {
 	}
 	if noOwner > 0 {
 		out = append(out, Finding{
-			PatternID:   StakeholderAbsenceTest,
-			Severity:    High,
-			Observation: fmt.Sprintf("%d control(s) have no named owner — [OWNER NEEDED]", noOwner),
-			Risk:        "Unowned controls are undefended in an audit interview",
+			PatternID:      StakeholderAbsenceTest,
+			Severity:       High,
+			Observation:    fmt.Sprintf("%d control(s) have no named owner — [OWNER NEEDED]", noOwner),
+			Risk:           "Unowned controls are undefended in an audit interview",
 			Recommendation: "Assign a named owner to every in-scope control before audit preparation",
 		})
 	}
@@ -313,11 +320,11 @@ func applyEvidenceTraceabilityTest(a *ChallengeArtifact, baseDir string) []Findi
 			}
 			if _, err := os.Stat(full); os.IsNotExist(err) {
 				out = append(out, Finding{
-					PatternID:   EvidenceTraceabilityTest,
-					Severity:    High,
-					ControlID:   c.ID,
-					Observation: fmt.Sprintf("Control %s: evidence_path %q does not exist — [CITATION NOT FOUND]", c.ID, c.EvidencePath),
-					Risk:        "Referenced evidence cannot be produced under audit — conformance claim is unsupported",
+					PatternID:      EvidenceTraceabilityTest,
+					Severity:       High,
+					ControlID:      c.ID,
+					Observation:    fmt.Sprintf("Control %s: evidence_path %q does not exist — [CITATION NOT FOUND]", c.ID, c.EvidencePath),
+					Risk:           "Referenced evidence cannot be produced under audit — conformance claim is unsupported",
 					Recommendation: "Verify evidence path is correct and the file exists; update path or re-collect evidence",
 				})
 			}
@@ -327,10 +334,10 @@ func applyEvidenceTraceabilityTest(a *ChallengeArtifact, baseDir string) []Findi
 	}
 	if noEvidence > 0 {
 		out = append(out, Finding{
-			PatternID:   EvidenceTraceabilityTest,
-			Severity:    High,
-			Observation: fmt.Sprintf("%d control(s) are marked satisfied with no evidence reference or path", noEvidence),
-			Risk:        "Untraced conformance claims will not survive audit — satisfaction without evidence is assertion",
+			PatternID:      EvidenceTraceabilityTest,
+			Severity:       High,
+			Observation:    fmt.Sprintf("%d control(s) are marked satisfied with no evidence reference or path", noEvidence),
+			Risk:           "Untraced conformance claims will not survive audit — satisfaction without evidence is assertion",
 			Recommendation: "Add evidence_ref or evidence_path to every control marked satisfied or partially_satisfied",
 		})
 	}
@@ -343,11 +350,11 @@ func applyInheritanceValidationTest(a *ChallengeArtifact) []Finding {
 	for _, c := range a.allControls() {
 		if c.Inherited && c.ValidatedFor == "" {
 			out = append(out, Finding{
-				PatternID:   InheritanceValidationTest,
-				Severity:    High,
-				ControlID:   c.ID,
-				Observation: fmt.Sprintf("Control %s is marked inherited from %q with no validated_for field — inheritance without validation is assumption", c.ID, c.InheritedFrom),
-				Risk:        "An auditor will ask how the enterprise control applies to this product's specific context and threat model",
+				PatternID:      InheritanceValidationTest,
+				Severity:       High,
+				ControlID:      c.ID,
+				Observation:    fmt.Sprintf("Control %s is marked inherited from %q with no validated_for field — inheritance without validation is assumption", c.ID, c.InheritedFrom),
+				Risk:           "An auditor will ask how the enterprise control applies to this product's specific context and threat model",
 				Recommendation: "Add validated_for field describing how this control was verified applicable to this product scope",
 			})
 		}
@@ -371,10 +378,10 @@ func applyExceptionHonestyTest(a *ChallengeArtifact) []Finding {
 	}
 	if exceptions == 0 && notSatisfied == 0 && len(controls) >= 10 {
 		return []Finding{{
-			PatternID:   ExceptionHonestyTest,
-			Severity:    Medium,
-			Observation: fmt.Sprintf("Artifact documents %d controls with zero exceptions and zero not-satisfied determinations — a program this clean has either not looked hard enough or has not documented exceptions honestly", len(controls)),
-			Risk:        "Auditors treat a zero-exception program with suspicion; undisclosed exceptions become findings",
+			PatternID:      ExceptionHonestyTest,
+			Severity:       Medium,
+			Observation:    fmt.Sprintf("Artifact documents %d controls with zero exceptions and zero not-satisfied determinations — a program this clean has either not looked hard enough or has not documented exceptions honestly", len(controls)),
+			Risk:           "Auditors treat a zero-exception program with suspicion; undisclosed exceptions become findings",
 			Recommendation: "Review scope and control applicability; document genuine exceptions with justification and risk acceptance",
 		}}
 	}
@@ -392,11 +399,11 @@ func applyCadenceSustainabilityTest(a *ChallengeArtifact) []Finding {
 		daysSince := int(now.Sub(*c.LastReviewed).Hours() / 24)
 		if daysSince > c.ReviewCadenceDays {
 			out = append(out, Finding{
-				PatternID:   CadenceSustainabilityTest,
-				Severity:    High,
-				ControlID:   c.ID,
-				Observation: fmt.Sprintf("Control %s: last reviewed %d days ago, cadence is %d days — overdue by %d days", c.ID, daysSince, c.ReviewCadenceDays, daysSince-c.ReviewCadenceDays),
-				Risk:        "Recurring requirement treated as a one-time event; cadence lapse is an audit finding",
+				PatternID:      CadenceSustainabilityTest,
+				Severity:       High,
+				ControlID:      c.ID,
+				Observation:    fmt.Sprintf("Control %s: last reviewed %d days ago, cadence is %d days — overdue by %d days", c.ID, daysSince, c.ReviewCadenceDays, daysSince-c.ReviewCadenceDays),
+				Risk:           "Recurring requirement treated as a one-time event; cadence lapse is an audit finding",
 				Recommendation: "Restore the review cadence; schedule the next review and add it to the evidence calendar (dose)",
 			})
 		}
@@ -426,10 +433,10 @@ func applyRiskAppetiteTest(a *ChallengeArtifact) []Finding {
 	pctHigh := float64(highRisk) / float64(scored) * 100
 	if pctHigh < 5 { // less than 5% of controls rated high/critical risk
 		return []Finding{{
-			PatternID:   RiskAppetiteTest,
-			Severity:    Medium,
-			Observation: fmt.Sprintf("%.0f%% of scored controls have a risk score ≥ 6 (%d/%d) — risk decisions cluster suspiciously in the low range", pctHigh, highRisk, scored),
-			Risk:        "A risk assessment designed to produce low scores rather than reflect operational reality will not survive a post-incident review",
+			PatternID:      RiskAppetiteTest,
+			Severity:       Medium,
+			Observation:    fmt.Sprintf("%.0f%% of scored controls have a risk score ≥ 6 (%d/%d) — risk decisions cluster suspiciously in the low range", pctHigh, highRisk, scored),
+			Risk:           "A risk assessment designed to produce low scores rather than reflect operational reality will not survive a post-incident review",
 			Recommendation: "Re-score risks using genuine threat modeling, not risk appetite as a ceiling; accept high residual risks explicitly rather than scoring them away",
 		}}
 	}
@@ -449,20 +456,20 @@ func applyLeadershipRealityTest(a *ChallengeArtifact) []Finding {
 		}
 		if c.Owner == "" {
 			out = append(out, Finding{
-				PatternID:   LeadershipRealityTest,
-				Severity:    High,
-				ControlID:   c.ID,
-				Observation: fmt.Sprintf("Control %s requires leadership but has no named owner — [OWNER NEEDED]", c.ID),
-				Risk:        "Cannot demonstrate leadership commitment under audit interview",
+				PatternID:      LeadershipRealityTest,
+				Severity:       High,
+				ControlID:      c.ID,
+				Observation:    fmt.Sprintf("Control %s requires leadership but has no named owner — [OWNER NEEDED]", c.ID),
+				Risk:           "Cannot demonstrate leadership commitment under audit interview",
 				Recommendation: "Assign a named individual (not a role title) and document the last instance of leadership involvement",
 			})
 		} else if genericOwners[strings.ToLower(strings.TrimSpace(c.Owner))] {
 			out = append(out, Finding{
-				PatternID:   LeadershipRealityTest,
-				Severity:    Medium,
-				ControlID:   c.ID,
-				Observation: fmt.Sprintf("Control %s requires leadership; owner is %q — a role title, not a named individual", c.ID, c.Owner),
-				Risk:        "Role titles do not survive interview-based audit; leadership accountability cannot be verified",
+				PatternID:      LeadershipRealityTest,
+				Severity:       Medium,
+				ControlID:      c.ID,
+				Observation:    fmt.Sprintf("Control %s requires leadership; owner is %q — a role title, not a named individual", c.ID, c.Owner),
+				Risk:           "Role titles do not survive interview-based audit; leadership accountability cannot be verified",
 				Recommendation: "Replace role titles with named individuals; ensure the named person can speak to this control",
 			})
 		}
@@ -482,10 +489,10 @@ func applyScopeBoundaryTest(a *ChallengeArtifact) []Finding {
 		return nil
 	}
 	return []Finding{{
-		PatternID:   ScopeBoundaryTest,
-		Severity:    High,
-		Observation: fmt.Sprintf("%d control(s) are excluded from scope with no justification documented", unjustified),
-		Risk:        "Auditor can challenge any exclusion; undocumented exclusions are automatically suspect",
+		PatternID:      ScopeBoundaryTest,
+		Severity:       High,
+		Observation:    fmt.Sprintf("%d control(s) are excluded from scope with no justification documented", unjustified),
+		Risk:           "Auditor can challenge any exclusion; undocumented exclusions are automatically suspect",
 		Recommendation: "Add exclusion_justification to every excluded control; describe why the control does not apply to this scope",
 	}}
 }
@@ -500,11 +507,11 @@ func applyOperationalRealityTest(a *ChallengeArtifact) []Finding {
 		score := passiveVoiceScore(c.Implementation)
 		if score >= 0.4 { // 40%+ passive constructions
 			out = append(out, Finding{
-				PatternID:   OperationalRealityTest,
-				Severity:    Low,
-				ControlID:   c.ID,
-				Observation: fmt.Sprintf("Control %s: implementation text has %.0f%% passive constructions — reads like documentation written to satisfy a requirement, not a description of operational behavior", c.ID, score*100),
-				Risk:        "Performative documentation is a medium-severity audit finding in management system standards",
+				PatternID:      OperationalRealityTest,
+				Severity:       Low,
+				ControlID:      c.ID,
+				Observation:    fmt.Sprintf("Control %s: implementation text has %.0f%% passive constructions — reads like documentation written to satisfy a requirement, not a description of operational behavior", c.ID, score*100),
+				Risk:           "Performative documentation is a medium-severity audit finding in management system standards",
 				Recommendation: "Rewrite in active voice naming the actor: 'The [team/person] reviews [artifact] [cadence] and records results in [location]'",
 			})
 		}

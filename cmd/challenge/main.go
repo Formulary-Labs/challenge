@@ -25,6 +25,7 @@ func main() {
 		severityFlag = flag.String("severity-threshold", "low", "Minimum severity to include: critical, high, medium, low")
 		programFlag  = flag.String("program", "", "Program slug for provenance logging")
 		fmtFlag      = flag.String("format", "json", "Output format: json (default), md")
+		catalogFlag  = flag.String("catalog", "", "Path to gemara ControlCatalog YAML for inheritance validation (optional)")
 		versionFlag  = flag.Bool("version", false, "Print version and exit")
 	)
 	flag.Usage = usage
@@ -46,6 +47,9 @@ func main() {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, `{"error": %q, "code": 2}`+"\n", err.Error())
 		os.Exit(exit.ToolError)
+	}
+	if *catalogFlag != "" {
+		a.CatalogPath = *catalogFlag
 	}
 
 	report := interrogate.ApplyAll(a, artifactPath, *severityFlag)
