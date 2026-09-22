@@ -131,7 +131,7 @@ func TestFromFile(t *testing.T) {
 	data, _ := json.Marshal(artifact)
 	dir := t.TempDir()
 	path := filepath.Join(dir, "artifact.json")
-	os.WriteFile(path, data, 0o644) //nolint:errcheck
+	os.WriteFile(path, data, 0o600) //nolint:errcheck
 
 	loaded, err := interrogate.Load(path)
 	if err != nil {
