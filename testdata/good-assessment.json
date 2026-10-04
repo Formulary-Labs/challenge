@@ -1,0 +1,58 @@
+{
+  "framework": "iso42001",
+  "program": "iso42001",
+  "product_context": "Synthetic Test Product",
+  "scope": "Test scope for challenge patterns",
+  "exception_count": 1,
+  "controls": [
+    {
+      "id": "A.5.2",
+      "title": "AI system impact assessment process",
+      "requirement": "The organization shall establish a process for AI system impact assessment.",
+      "implementation": "Product team maintains a formal impact assessment using Trust & Safety templates covering ethical, legal, and safety risks before release.",
+      "owner": "Alex Langston",
+      "determination": "partially_satisfied",
+      "evidence_ref": "docs/impact-assessment.md",
+      "risk_score": 6
+    },
+    {
+      "id": "A.6.2.6",
+      "title": "AI system operation and monitoring",
+      "requirement": "The organization shall monitor AI system operation.",
+      "implementation": "Prometheus metrics and Splunk/Sentry sinks are configured; OTel export tracked in LCORE-322.",
+      "owner": "Alex Langston",
+      "determination": "satisfied",
+      "evidence_ref": "metrics/",
+      "risk_score": 3
+    },
+    {
+      "id": "4.1",
+      "title": "Understanding the organization and its context",
+      "requirement": "The organization shall determine external and internal issues.",
+      "implementation": "The organization shall determine external and internal issues relevant to its purpose.",
+      "owner": "compliance-team",
+      "determination": "satisfied",
+      "leadership_required": true,
+      "risk_score": 2
+    },
+    {
+      "id": "A.8.2",
+      "title": "AI system security",
+      "requirement": "The organization shall address AI system security.",
+      "implementation": "Red team report pending publication.",
+      "owner": "",
+      "determination": "not_satisfied",
+      "risk_score": 7
+    },
+    {
+      "id": "A.9.2",
+      "title": "Information for interested parties",
+      "requirement": "Information shall be made available.",
+      "implementation": "System cards published for in-scope products.",
+      "owner": "Alex Langston",
+      "determination": "satisfied",
+      "excluded": false,
+      "risk_score": 1
+    }
+  ]
+}

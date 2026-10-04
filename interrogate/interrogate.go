@@ -133,14 +133,34 @@ func (a *ChallengeArtifact) allControls() []ControlEntry {
 }
 
 // Load reads and parses a challenge artifact from a file.
+// Accepts ChallengeArtifact JSON (controls as array) and assay assemble /
+// AssessmentState JSON (controls as a map keyed by control ID).
 func Load(path string) (*ChallengeArtifact, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("reading artifact %q: %w", path, err)
 	}
+	a, err := parseArtifact(data)
+	if err != nil {
+		return nil, fmt.Errorf("parsing artifact %q: %w", path, err)
+	}
+	return a, nil
+}
+
+func parseArtifact(data []byte) (*ChallengeArtifact, error) {
 	var a ChallengeArtifact
 	if err := json.Unmarshal(data, &a); err != nil {
-		return nil, fmt.Errorf("parsing artifact %q: %w", path, err)
+		// Assay AssessmentState uses controls as a map[string]*ControlEntry.
+		converted, cerr := loadAssayState(data)
+		if cerr != nil {
+			return nil, err
+		}
+		return converted, nil
+	}
+	if len(a.allControls()) == 0 {
+		if converted, cerr := loadAssayState(data); cerr == nil && len(converted.allControls()) > 0 {
+			return converted, nil
+		}
 	}
 	// Normalize from gemara metadata.
 	if a.Metadata != nil {
@@ -152,6 +172,62 @@ func Load(path string) (*ChallengeArtifact, error) {
 		}
 	}
 	return &a, nil
+}
+
+// loadAssayState converts an assay AssessmentState / assemble JSON into a
+// ChallengeArtifact. controls is a map in that schema.
+func loadAssayState(data []byte) (*ChallengeArtifact, error) {
+	var raw struct {
+		Framework   string `json:"framework"`
+		Program     string `json:"program"`
+		ProductName string `json:"product_name"`
+		Controls    map[string]struct {
+			ID          string `json:"id"`
+			Title       string `json:"title"`
+			Requirement string `json:"requirement"`
+			Response    *struct {
+				Narrative      string `json:"narrative"`
+				Determination  string `json:"determination"`
+				Citation       string `json:"citation"`
+				Gap            string `json:"gap"`
+				RemediationPath string `json:"remediation_path"`
+			} `json:"response"`
+		} `json:"controls"`
+	}
+	if err := json.Unmarshal(data, &raw); err != nil {
+		return nil, err
+	}
+	if len(raw.Controls) == 0 {
+		return nil, fmt.Errorf("no controls found in assay state shape")
+	}
+	a := &ChallengeArtifact{
+		Framework:      raw.Framework,
+		Program:        raw.Program,
+		ProductContext: raw.ProductName,
+	}
+	for id, c := range raw.Controls {
+		entry := ControlEntry{
+			ID:          firstNonEmpty(c.ID, id),
+			Title:       c.Title,
+			Requirement: c.Requirement,
+		}
+		if c.Response != nil {
+			entry.Implementation = c.Response.Narrative
+			entry.Determination = c.Response.Determination
+			entry.EvidenceRef = c.Response.Citation
+		}
+		a.Controls = append(a.Controls, entry)
+	}
+	return a, nil
+}
+
+func firstNonEmpty(vals ...string) string {
+	for _, v := range vals {
+		if v != "" {
+			return v
+		}
+	}
+	return ""
 }
 
 const disclaimer = "All findings require validation by a qualified compliance SME before action is taken."
