@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "run_id": "synthetic-run",
+  "program": "iso42001",
+  "framework": "iso42001",
+  "product_name": "Synthetic Product",
+  "product_version": "1.0.0",
+  "controls": {
+    "A.5.2": {
+      "id": "A.5.2",
+      "title": "AI system impact assessment process",
+      "requirement": "Establish impact assessment process.",
+      "status": "validated",
+      "response": {
+        "citation": "docs/ia.md",
+        "citation_quality": "direct_assertion",
+        "narrative": "Impact assessment drafted using standard T&S template covering ethical and privacy risks.",
+        "determination": "partially_satisfied",
+        "gap": "Not yet published",
+        "remediation_path": "Publish IA before audit"
+      }
+    },
+    "A.6.2.6": {
+      "id": "A.6.2.6",
+      "title": "Operation and monitoring",
+      "requirement": "Monitor AI system operation.",
+      "status": "validated",
+      "response": {
+        "citation": "metrics/",
+        "citation_quality": "direct_assertion",
+        "narrative": "Prometheus metrics and degraded-mode handling are implemented.",
+        "determination": "satisfied"
+      }
+    }
+  }
+}
