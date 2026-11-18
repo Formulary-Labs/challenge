@@ -93,14 +93,40 @@ The `disclaimer` in every output is not boilerplate. `challenge` is a structural
 
 ## When to run it
 
-Run `challenge` on an `assay` output before submitting to auditors:
+`challenge` consumes **`assay assemble` JSON**, not gemara YAML and not raw unfinished assay state.
 
 ```bash
-assay --framework iso27001 --catalog catalog.yaml --product-source docs/ > assessment.yaml
-challenge assessment.yaml --severity-threshold medium
+# 1. Initialize assessment from a ControlCatalog (local fixture path)
+assay init --catalog path/to/control-catalog.yaml \
+  --product-name "MyProduct" --product-version "1.0" \
+  --framework iso42001 --program myprogram
+
+# 2. Fill batches (human or agent), then validate
+assay batch --state data/myprogram/assessments/<run>-state.json
+assay validate --state data/myprogram/assessments/<run>-state.json \
+  --responses responses.json
+
+# 3. Assemble final JSON (this is the challenge input)
+assay assemble --state data/myprogram/assessments/<run>-state.json
+
+# 4. Interrogate the assembled assessment JSON
+challenge data/myprogram/assessments/<product>-<framework>-assessment.json \
+  --program myprogram --format md --severity-threshold medium
 ```
 
-Run it on a SOA after any major program change to check for structural regressions before the next cycle.
+Synthetic Formulary testdata (not gemara docs): `challenge/testdata/good-assessment.json` and `challenge/testdata/assay-assemble-shape.json`.
+
+```bash
+challenge testdata/good-assessment.json --format md
+```
+
+`Load` accepts either:
+- `ChallengeArtifact` with `controls` as a **JSON array**, or
+- assay `AssessmentState` / assemble output with `controls` as a **map keyed by control ID**
+
+Formulary does not ship gemara framework catalogs. Point `--catalog` / assay `--catalog` at your own private ControlCatalog when needed.
+
+Run it on a SOA/assessment after any major program change to check for structural regressions before the next cycle.
 
 ## Catalogs
 

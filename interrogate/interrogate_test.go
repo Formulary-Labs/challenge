@@ -142,6 +142,44 @@ func TestFromFile(t *testing.T) {
 	}
 }
 
+func TestLoad_goodAssessmentTestdata(t *testing.T) {
+	path := filepath.Join("..", "testdata", "good-assessment.json")
+	loaded, err := interrogate.Load(path)
+	if err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+	if len(loaded.Controls) < 3 {
+		t.Fatalf("controls = %d, want >= 3", len(loaded.Controls))
+	}
+	report := interrogate.ApplyAll(loaded, path, "low")
+	if len(report.Findings) == 0 {
+		t.Error("expected at least one finding from good-assessment.json")
+	}
+}
+
+func TestLoad_assayAssembleShape(t *testing.T) {
+	path := filepath.Join("..", "testdata", "assay-assemble-shape.json")
+	loaded, err := interrogate.Load(path)
+	if err != nil {
+		t.Fatalf("Load assay shape: %v", err)
+	}
+	if loaded.Framework != "iso42001" {
+		t.Errorf("framework = %q", loaded.Framework)
+	}
+	if len(loaded.Controls) != 2 {
+		t.Fatalf("controls = %d, want 2", len(loaded.Controls))
+	}
+	found := false
+	for _, c := range loaded.Controls {
+		if c.ID == "A.5.2" && c.Determination == "partially_satisfied" {
+			found = true
+		}
+	}
+	if !found {
+		t.Error("expected A.5.2 partially_satisfied from assay map shape")
+	}
+}
+
 func hasPattern(r interrogate.Report, id interrogate.PatternID) bool {
 	for _, f := range r.Findings {
 		if f.PatternID == id {
